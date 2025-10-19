@@ -1,0 +1,45 @@
+import express from "express";
+import {faker} from "@faker-js/faker"
+import pkg from "pg";
+
+const {Pool}=pkg;
+const app=express();
+const port =4000;
+
+const pool=new Pool({
+    user:"postgres",
+    host:"localhost",
+    password:"chatonnofy",
+    database:"fakerdb",
+    port:5432
+});
+async function main(){
+
+//await pool.query("CREATE TABLE IF NOT EXISTS Etudiant( id  SERIAL PRIMARY KEY, nom VARCHAR(100), email VARCHAR(100), age INT )");
+
+app.get("/remplissage/:n", async (req,res)=>{
+   const n= parseInt(req.params.n) || 100000;
+   let values=[];
+   let placeholder=[];
+
+   for(let i=0;i <n; i++){
+    const nom=faker.person.fullName();
+    const email=faker.internet.email();
+    const age=faker.number.int({min:18, max:50});
+
+    values.push(nom,email,age);
+    placeholder.push(`($${i*3+1},$${i*3 +2}, $${i*3+3})`);
+   }
+
+    const query=`INSERT INTO Etudiant(nom,email,age) VALUES ${placeholder.join(",")}`;
+    await pool.query(query,values);
+    res.json({message:`${n}Etudiant inseres avec`})
+    
+});
+}
+
+app.listen(port, ()=>{
+    console.log("le serveur fonctionne sur le port 4000");
+})
+ 
+main().catch(err=>console.error(err));
