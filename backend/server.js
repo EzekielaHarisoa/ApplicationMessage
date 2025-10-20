@@ -1,38 +1,64 @@
 import express from "express";
+import { createServer } from "http";
+import jwt from "jsonwebtoken";
+import { Server } from "socket.io";
+import authRouter from "./routes/auth.routes.js";
+import messRouter from "./routes/message.routes.js";
+import dotenv from "dotenv";
 import cors from "cors";
+
+dotenv.config();
+
 const app = express();
-const PORT = process.env.PORT || 5000;
-import pkg from "pg";
+const port = 5000;
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-const {Pool}=pkg;
-const pool= new Pool({
-  user:"postgres",
-  host:"localhost",
-  password:"chatonnofy",
-  database:"messageDB"
-})
-// Sample route
-app.post("/user", async (req, res) => {
-  const {nom,email,password}=req.body;
-  try {
-    const result=await pool.query("INSERT INTO utilisateur(nom,email,password) values ($1,$2,$3)",[nom,email,password]);
-    if(!result){
-      res.status(401).json("erreur de requette ");
-    }
-    res.status(200).json({message:"Insertion reussi", user:result});
-    console.log("user:" + result)
-  } catch (error) {
-      res.status(500).json("erreur interne du serveur",error);
-
-  }
-
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+  },
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.use(express.json());
+app.use(cors());
+
+app.use("/user", authRouter);
+app.use("/message",messRouter)
+
+//  Middleware d'auth Socket.IO
+io.use((socket, next) => {
+  const token = socket.handshake.auth?.token;
+  if (!token) return next(new Error("auth error"));
+
+  try {
+    const user = jwt.verify(token, process.env.JWT_SECRET);
+    socket.user = user;
+    next();
+  } catch {
+    next(new Error("auth error"));
+  }
+});
+
+//  Connexion Socket.IO
+io.on("connection", (socket) => {
+  console.log(` User connected: ${socket.user.username}`);
+
+  socket.on("sendMessage", (msg) => {
+    console.log(" Message reçu:", msg);
+    io.emit("newMessage", {
+      user: socket.user.username,
+      text: msg,
+      date: new Date(),
+    });
+  });
+
+  socket.on("disconnect", () => {
+    console.log(` User disconnected: ${socket.user.username}`);
+  });
+});
+
+//  Lancement serveur
+server.listen(port, () => {
+  console.log(` Serveur en ligne sur le port ${port}`);
 });
