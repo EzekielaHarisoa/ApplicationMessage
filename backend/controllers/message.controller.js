@@ -52,12 +52,3 @@ export const editMessage=async(req,res)=>{
       }
 
 }
-export const reagirMess= async(req, res)=>{
-    const id=req.params.id;
-    try {
-        
-    } catch (error) {
-        
-    }
-
-}
