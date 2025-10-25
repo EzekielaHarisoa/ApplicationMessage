@@ -6,6 +6,7 @@ import authRouter from "./routes/auth.routes.js";
 import messRouter from "./routes/message.routes.js";
 import dotenv from "dotenv";
 import cors from "cors";
+import reactionRouter from "./routes/reaction.routes.js";
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use(cors());
 
 app.use("/user", authRouter);
 app.use("/message",messRouter)
+app.use("/reaction",reactionRouter)
 
 //  Middleware d'auth Socket.IO
 io.use((socket, next) => {
