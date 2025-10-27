@@ -1,8 +1,8 @@
 export default function Login() {
   return (
-    <div className="flex flex-col items-center justify-center flex-grow bg-gray-100">
+    <div className="flex flex-col items-center justify-center flex-grow bg-neutral p-28 ">
       <h2 className="text-2xl font-bold mb-4">Login</h2>
-      <form className="bg-white p-6 rounded shadow-md w-80">
+      <form className=" p-6 rounded  w-80">
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="email">
             Email

@@ -35,7 +35,7 @@ export const ajoutReaction= async(req ,res)=>{
 
 export const deleteReaction= async(req , res)=>{
     const {id}=req.params;
-    const {idUser,type}=req.body
+    const {idUser,type}=req.body;
     try {
         const result=await pool.query("DELETE  FROM  reactions  WHERE id=$1 AND idUser =$2 AND type=$3",[id,idUser,type]);
          if(result.rowCount===0){
