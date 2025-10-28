@@ -1,6 +1,12 @@
+import { Link } from "react-router-dom";
 export default function Signin() {
   return (
-    <div className="flex flex-col items-center justify-center flex-grow bg-gray-100 p-10">
+    <div className="flex m-10  flex-row-reverse bg-pink-500 shadow-md  items-center justify-center rounded-lg">
+    <div className="w-full">
+
+    </div> 
+     
+    <div className="flex flex-col flex-grow bg-gray-100 p-10 w-auto  ">
       <h2 className="text-xl font-bold pl-6 w-96">Creer mon compte</h2>
       <p className="pl-6 w-96  text-sm">Decriver-vous en quelques mots et inscrivez-vous sur <br /> Message</p>
       <form className="p-6  w-96  ">
@@ -53,11 +59,10 @@ export default function Signin() {
           />
         </div>
         <button
-          type="submit"
           className=" w-full bg-primary mt-2 text-white py-1 rounded-xl hover:bg-green-600"
-        >
-          
-          Creer mon compte
+          type="submit"
+          to="/home">          
+         <Link to="/home"> Creer mon compte</Link>
         </button>
         <div className="border-2 border-t-pink-500 mt-5 flex justify-center items-center w-52 ml-16 ">
               
@@ -65,14 +70,15 @@ export default function Signin() {
                 <p className="w-52 ml-32">ou</p>
 
         <button  className=" w-full bg-primary mt-2 text-white py-1 rounded-xl hover:bg-green-600">
-          Login with Google
+         <Link> Login with Google</Link>
         </button>
         <button  className=" w-full bg-primary mt-2 text-white py-1 rounded-xl hover:bg-green-600">
-           Login with GitHub
+          <Link>  Login with GitHub</Link>
         </button>
 
         
       </form>
+    </div>
     </div>
   );
 }
