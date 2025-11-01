@@ -7,6 +7,7 @@ import messRouter from "./routes/message.routes.js";
 import dotenv from "dotenv";
 import cors from "cors";
 import reactionRouter from "./routes/reaction.routes.js";
+import publicationRouter from "./routes/publication.routes.js";
 
 dotenv.config();
 
@@ -27,6 +28,8 @@ app.use(cors());
 app.use("/user", authRouter);
 app.use("/message",messRouter)
 app.use("/reaction",reactionRouter)
+app.use("/publication",publicationRouter)
+app.use("/uploads",express.static("uploads"));
 
 //  Middleware d'auth Socket.IO
 io.use((socket, next) => {
@@ -60,7 +63,6 @@ io.on("connection", (socket) => {
   });
 });
 
-//  Lancement serveur
 server.listen(port, () => {
   console.log(` Serveur en ligne sur le port ${port}`);
 });
